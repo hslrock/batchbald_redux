@@ -1,0 +1,12 @@
+experiments/*
+data/*
+MNIST/*
+wandb/*
+data/cifar-100-python.tar.gz
+*.txt~
+data/cifar-100-python/meta
+data/cifar-100-python/test
+data/cifar-100-python/train
+*.pth
+trainloss.data
+*.data

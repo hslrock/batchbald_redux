@@ -106,6 +106,22 @@ def get_batchbald_batch(
 
 # Cell
 
+def get_bald_batch_removal(log_probs_N_K_C: torch.Tensor, batch_size: int, dtype=None, device=None,remove_ratio=0.1) -> CandidateBatch:
+    N, K, C = log_probs_N_K_C.shape
+
+    batch_size = min(batch_size, N)
+    remove_num=int(N*remove_ratio)
+
+    candidate_indices = []
+    candidate_scores = []
+
+    scores_N = -compute_conditional_entropy(log_probs_N_K_C)
+    scores_N += compute_entropy(log_probs_N_K_C)
+     
+    candiate_scores, candidate_indices = torch.topk(scores_N, batch_size,largest=True)
+    _, remove_indices = torch.topk(scores_N, remove_num,largest=False)
+
+    return CandidateBatch(candiate_scores.tolist(), candidate_indices.tolist()),remove_indices
 
 def get_bald_batch(log_probs_N_K_C: torch.Tensor, batch_size: int, dtype=None, device=None) -> CandidateBatch:
     N, K, C = log_probs_N_K_C.shape

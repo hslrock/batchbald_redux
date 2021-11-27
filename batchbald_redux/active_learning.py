@@ -33,6 +33,27 @@ class ActiveLearningData:
         self.pool_dataset = data.Subset(self.dataset, None)
 
         self._update_indices()
+    def remove_index(self, pool_indices):
+        """Acquire elements from the pool dataset into the training dataset.
+
+        Rremove them from the pool dataset."""
+        indices = self.get_dataset_indices(pool_indices)
+
+        #self.training_mask[indices] = True
+        self.pool_mask[indices] = False
+        self._update_indices()
+        
+    def acquire_remove(self, acquire_indices,remove_indices):
+        """Acquire elements from the pool dataset into the training dataset.
+
+        Rremove them from the pool dataset."""
+        acq_indices =  self.get_dataset_indices(acquire_indices)
+        rem_indices = self.get_dataset_indices(remove_indices)
+        
+        self.training_mask[acq_indices] = True
+        self.pool_mask[rem_indices] = False
+        self.pool_mask[acq_indices] = False
+        self._update_indices()
 
     def _update_indices(self):
         self.training_dataset.indices = np.nonzero(self.training_mask)[0]
